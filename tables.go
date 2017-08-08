@@ -128,7 +128,7 @@ func SelectFromTables(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := fmt.Sprintf("%s %s.%s.%s", selectStr, database, schema, table)
+	query := fmt.Sprintf(`%s "%s"."%s"."%s"`, selectStr, database, schema, table)
 
 	countQuery, err := postgres.CountByRequest(r)
 	if err != nil {
@@ -137,7 +137,7 @@ func SelectFromTables(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if countQuery != "" {
-		query = fmt.Sprintf("%s %s.%s.%s", countQuery, database, schema, table)
+		query = fmt.Sprintf(`%s "%s"."%s"."%s"`, countQuery, database, schema, table)
 	}
 
 	joinValues, err := postgres.JoinByRequest(r)
