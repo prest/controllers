@@ -28,6 +28,7 @@ psql -d $DB_NAME -h $DB_HOST -p $DB_PORT -U $DB_USER -c "create table test_group
 
 # Inserts
 psql -d $DB_NAME -h $DB_HOST -p $DB_PORT -U $DB_USER -c "insert into test (name) values ('prest tester');"
+psql -d $DB_NAME -h $DB_HOST -p $DB_PORT -U $DB_USER -c "insert into Reply (name) values ('prest tester');"
 psql -d $DB_NAME -h $DB_HOST -p $DB_PORT -U $DB_USER -c "insert into test (name) values ('tester02');"
 psql -d $DB_NAME -h $DB_HOST -p $DB_PORT -U $DB_USER -c "insert into test2 (name, number) values ('tester02', 2);"
 psql -d $DB_NAME -h $DB_HOST -p $DB_PORT -U $DB_USER -c "insert into test3 (name) values ('prest');"
