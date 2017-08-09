@@ -126,6 +126,8 @@ func SelectFromTables(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(">>>>>>>", cols, selectStr)
+
 	query := fmt.Sprintf(`%s "%s"."%s"."%s"`, selectStr, database, schema, table)
 
 	countQuery, err := postgres.CountByRequest(r)
