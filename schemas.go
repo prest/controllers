@@ -41,6 +41,7 @@ func GetSchemas(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sqlSchemas = fmt.Sprint(sqlSchemas, " ", page)
+	fmt.Println(">>>>>", sqlSchemas)
 	sc := postgres.Query(sqlSchemas, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
