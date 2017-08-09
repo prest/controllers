@@ -38,7 +38,6 @@ func GetTables(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sqlTables = fmt.Sprint(sqlTables, order)
-	fmt.Println(">>>", sqlTables)
 	sc := postgres.Query(sqlTables, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
@@ -93,7 +92,6 @@ func GetTablesByDatabaseAndSchema(w http.ResponseWriter, r *http.Request) {
 	valuesAux = append(valuesAux, database)
 	valuesAux = append(valuesAux, schema)
 	valuesAux = append(valuesAux, values...)
-	fmt.Println(">>>>>>>>>>>", sqlSchemaTables)
 	sc := postgres.Query(sqlSchemaTables, valuesAux...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
@@ -194,7 +192,6 @@ func SelectFromTables(w http.ResponseWriter, r *http.Request) {
 	if countQuery != "" {
 		runQuery = postgres.QueryCount
 	}
-	fmt.Println(">>>>", sqlSelect)
 	sc := runQuery(sqlSelect, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)

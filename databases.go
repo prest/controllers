@@ -42,7 +42,6 @@ func GetDatabases(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sqlDatabases = fmt.Sprint(sqlDatabases, " ", page)
-	fmt.Println(">>>>>", sqlDatabases)
 	sc := postgres.Query(sqlDatabases, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
