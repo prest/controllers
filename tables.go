@@ -125,9 +125,6 @@ func SelectFromTables(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	fmt.Println(">>>>>>>", cols, selectStr)
-
 	query := fmt.Sprintf(`%s "%s"."%s"."%s"`, selectStr, database, schema, table)
 
 	countQuery, err := postgres.CountByRequest(r)
@@ -194,6 +191,7 @@ func SelectFromTables(w http.ResponseWriter, r *http.Request) {
 	if countQuery != "" {
 		runQuery = postgres.QueryCount
 	}
+
 	sc := runQuery(sqlSelect, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
