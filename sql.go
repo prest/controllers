@@ -10,19 +10,19 @@ import (
 
 // ExecuteScriptQuery is a function to execute and return result of script query
 func ExecuteScriptQuery(rq *http.Request, queriesPath string, script string) ([]byte, error) {
-	sqlPath, err := config.Adapter.GetScript(rq.Method, queriesPath, script)
+	sqlPath, err := config.PrestConf.Adapter.GetScript(rq.Method, queriesPath, script)
 	if err != nil {
 		err = fmt.Errorf("could not get script %s/%s, %+v", queriesPath, script, err)
 		return nil, err
 	}
 
-	sql, values, err := config.Adapter.ParseScript(sqlPath, rq.URL.Query())
+	sql, values, err := config.PrestConf.Adapter.ParseScript(sqlPath, rq.URL.Query())
 	if err != nil {
 		err = fmt.Errorf("could not parse script %s/%s, %+v", queriesPath, script, err)
 		return nil, err
 	}
 
-	sc := config.Adapter.ExecuteScripts(rq.Method, sql, values)
+	sc := config.PrestConf.Adapter.ExecuteScripts(rq.Method, sql, values)
 	if sc.Err() != nil {
 		err = fmt.Errorf("could not execute sql %+v, %s", sc.Err(), sql)
 		return nil, err

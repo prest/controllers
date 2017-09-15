@@ -10,19 +10,19 @@ import (
 
 // GetSchemas list all (or filter) schemas
 func GetSchemas(w http.ResponseWriter, r *http.Request) {
-	requestWhere, values, err := config.Adapter.WhereByRequest(r, 1)
+	requestWhere, values, err := config.PrestConf.Adapter.WhereByRequest(r, 1)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	sqlSchemas, hasCount := config.Adapter.SchemaClause(r)
+	sqlSchemas, hasCount := config.PrestConf.Adapter.SchemaClause(r)
 
 	if requestWhere != "" {
 		sqlSchemas = fmt.Sprint(sqlSchemas, " WHERE ", requestWhere)
 	}
 
-	order, err := config.Adapter.OrderByRequest(r)
+	order, err := config.PrestConf.Adapter.OrderByRequest(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -34,14 +34,14 @@ func GetSchemas(w http.ResponseWriter, r *http.Request) {
 		sqlSchemas = fmt.Sprint(sqlSchemas, fmt.Sprintf(statements.SchemasOrderBy, statements.FieldSchemaName))
 	}
 
-	page, err := config.Adapter.PaginateIfPossible(r)
+	page, err := config.PrestConf.Adapter.PaginateIfPossible(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	sqlSchemas = fmt.Sprint(sqlSchemas, " ", page)
-	sc := config.Adapter.Query(sqlSchemas, values...)
+	sc := config.PrestConf.Adapter.Query(sqlSchemas, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
 		return
