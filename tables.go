@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 
 	"github.com/gorilla/mux"
 	"github.com/prest/adapters/postgres"
@@ -217,8 +218,13 @@ func InsertInTables(w http.ResponseWriter, r *http.Request) {
 	sql := fmt.Sprintf(statements.InsertQuery, database, schema, table, names, placeholders)
 
 	sc := postgres.Insert(sql, values...)
-	if sc.Err() != nil {
-		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
+	if err = sc.Err(); err != nil {
+		r := regexp.MustCompile(`pq: relation ".*" does not exist`)
+		if r.MatchString(err.Error()) {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	w.Write(sc.Bytes())

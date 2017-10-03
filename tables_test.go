@@ -159,8 +159,8 @@ func TestInsertInTables(t *testing.T) {
 		{"execute insert in a table with jsonb field", "/prest/public/testjson", mJSON, http.StatusOK},
 		{"execute insert in a table without custom where clause", "/prest/public/test", m, http.StatusOK},
 		{"execute insert in a table with invalid database", "/0prest/public/test", m, http.StatusBadRequest},
-		{"execute insert in a table with invalid schema", "/prest/0public/test", m, http.StatusBadRequest},
-		{"execute insert in a table with invalid table", "/prest/public/0test", m, http.StatusBadRequest},
+		{"execute insert in a table with invalid schema", "/prest/0public/test", m, http.StatusNotFound},
+		{"execute insert in a table with invalid table", "/prest/public/0test", m, http.StatusNotFound},
 		{"execute insert in a table with invalid body", "/prest/public/test", nil, http.StatusBadRequest},
 	}
 
