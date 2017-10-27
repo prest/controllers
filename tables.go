@@ -62,6 +62,8 @@ func GetTablesByDatabaseAndSchema(w http.ResponseWriter, r *http.Request) {
 	database := vars["database"]
 	schema := vars["schema"]
 
+	postgres.SetDatabase(database)
+
 	requestWhere, values, err := postgres.WhereByRequest(r, 3)
 	if err != nil {
 		err = fmt.Errorf("could not perform WhereByRequest: %v", err)
@@ -116,6 +118,8 @@ func SelectFromTables(w http.ResponseWriter, r *http.Request) {
 	database := vars["database"]
 	schema := vars["schema"]
 	table := vars["table"]
+
+	postgres.SetDatabase(database)
 
 	// get selected columns, "*" if empty "_columns"
 	cols, err := postgres.FieldsPermissions(r, table, "read")
@@ -217,6 +221,8 @@ func InsertInTables(w http.ResponseWriter, r *http.Request) {
 	schema := vars["schema"]
 	table := vars["table"]
 
+	postgres.SetDatabase(database)
+
 	names, placeholders, values, err := postgres.ParseInsertRequest(r)
 	if err != nil {
 		err = fmt.Errorf("could not perform InsertInTables: %v", err)
@@ -240,6 +246,8 @@ func DeleteFromTable(w http.ResponseWriter, r *http.Request) {
 	database := vars["database"]
 	schema := vars["schema"]
 	table := vars["table"]
+
+	postgres.SetDatabase(database)
 
 	where, values, err := postgres.WhereByRequest(r, 1)
 	if err != nil {
@@ -267,6 +275,8 @@ func UpdateTable(w http.ResponseWriter, r *http.Request) {
 	database := vars["database"]
 	schema := vars["schema"]
 	table := vars["table"]
+
+	postgres.SetDatabase(database)
 
 	where, whereValues, err := postgres.WhereByRequest(r, 1)
 	if err != nil {
