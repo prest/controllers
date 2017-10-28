@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/prest/config"
 	"github.com/prest/statements"
@@ -22,8 +23,18 @@ func GetSchemas(w http.ResponseWriter, r *http.Request) {
 		sqlSchemas = fmt.Sprint(sqlSchemas, " WHERE ", requestWhere)
 	}
 
-	order, err := config.PrestConf.Adapter.OrderByRequest(r)
+	distinct, err := postgres.DistinctClause(r)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if distinct != "" {
+		sqlSchemas = strings.Replace(sqlSchemas, "SELECT", distinct, 1)
+	}
+
+	order, err := config.PrestConf.Adapter.OrderByRequest(r)
+
+  if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
