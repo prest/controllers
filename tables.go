@@ -34,7 +34,7 @@ func GetTables(w http.ResponseWriter, r *http.Request) {
 		statements.TablesSelect,
 		statements.TablesWhere)
 
-	distinct, err := postgres.DistinctClause(r)
+	distinct, err := config.PrestConf.Adapter.DistinctClause(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

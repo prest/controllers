@@ -24,7 +24,7 @@ func GetDatabases(w http.ResponseWriter, r *http.Request) {
 		sqlDatabases = fmt.Sprint(sqlDatabases, " AND ", requestWhere)
 	}
 
-	distinct, err := postgres.DistinctClause(r)
+	distinct, err := config.PrestConf.Adapter.DistinctClause(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -35,7 +35,7 @@ func GetDatabases(w http.ResponseWriter, r *http.Request) {
 
 	order, err := config.PrestConf.Adapter.OrderByRequest(r)
 
-  if err != nil {
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
