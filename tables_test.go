@@ -34,7 +34,7 @@ func TestGetTables(t *testing.T) {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/tables", GetTables).Methods("GET")
+	router.Handle("/tables", GenericHttpHandler(GetTables)).Methods("GET")
 	server := httptest.NewServer(router)
 	defer server.Close()
 
@@ -64,7 +64,7 @@ func TestGetTablesByDatabaseAndSchema(t *testing.T) {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/{database}/{schema}", GetTablesByDatabaseAndSchema).Methods("GET")
+	router.Handle("/{database}/{schema}", GenericHttpHandler(GetTablesByDatabaseAndSchema)).Methods("GET")
 	server := httptest.NewServer(router)
 	defer server.Close()
 
@@ -76,7 +76,7 @@ func TestGetTablesByDatabaseAndSchema(t *testing.T) {
 
 func TestSelectFromTables(t *testing.T) {
 	router := mux.NewRouter()
-	router.HandleFunc("/{database}/{schema}/{table}", SelectFromTables).Methods("GET")
+	router.Handle("/{database}/{schema}/{table}", GenericHttpHandler(SelectFromTables)).Methods("GET")
 	server := httptest.NewServer(router)
 	defer server.Close()
 
@@ -155,7 +155,7 @@ func TestInsertInTables(t *testing.T) {
 	mARRAY["data"] = []string{"value 1", "value 2", "value 3"}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/{database}/{schema}/{table}", InsertInTables).Methods("POST")
+	router.Handle("/{database}/{schema}/{table}", GenericHttpHandler(InsertInTables)).Methods("POST")
 	server := httptest.NewServer(router)
 	defer server.Close()
 
@@ -182,7 +182,7 @@ func TestInsertInTables(t *testing.T) {
 
 func TestDeleteFromTable(t *testing.T) {
 	router := mux.NewRouter()
-	router.HandleFunc("/{database}/{schema}/{table}", DeleteFromTable).Methods("DELETE")
+	router.Handle("/{database}/{schema}/{table}", GenericHttpHandler(DeleteFromTable)).Methods("DELETE")
 	server := httptest.NewServer(router)
 	defer server.Close()
 
@@ -208,7 +208,7 @@ func TestDeleteFromTable(t *testing.T) {
 
 func TestUpdateFromTable(t *testing.T) {
 	router := mux.NewRouter()
-	router.HandleFunc("/{database}/{schema}/{table}", UpdateTable).Methods("PUT", "PATCH")
+	router.Handle("/{database}/{schema}/{table}", GenericHttpHandler(UpdateTable)).Methods("PUT", "PATCH")
 	server := httptest.NewServer(router)
 	defer server.Close()
 

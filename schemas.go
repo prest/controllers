@@ -10,11 +10,10 @@ import (
 )
 
 // GetSchemas list all (or filter) schemas
-func GetSchemas(w http.ResponseWriter, r *http.Request) {
+func GetSchemas(w http.ResponseWriter, r *http.Request) (int, error) {
 	requestWhere, values, err := config.PrestConf.Adapter.WhereByRequest(r, 1)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	sqlSchemas, hasCount := config.PrestConf.Adapter.SchemaClause(r)
@@ -25,8 +24,7 @@ func GetSchemas(w http.ResponseWriter, r *http.Request) {
 
 	distinct, err := config.PrestConf.Adapter.DistinctClause(r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return http.StatusBadRequest, err
 	}
 	if distinct != "" {
 		sqlSchemas = strings.Replace(sqlSchemas, "SELECT", distinct, 1)
@@ -35,8 +33,7 @@ func GetSchemas(w http.ResponseWriter, r *http.Request) {
 	order, err := config.PrestConf.Adapter.OrderByRequest(r)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	if order != "" {
@@ -47,15 +44,15 @@ func GetSchemas(w http.ResponseWriter, r *http.Request) {
 
 	page, err := config.PrestConf.Adapter.PaginateIfPossible(r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	sqlSchemas = fmt.Sprint(sqlSchemas, " ", page)
 	sc := config.PrestConf.Adapter.Query(sqlSchemas, values...)
 	if sc.Err() != nil {
-		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
-		return
+		return http.StatusBadRequest, sc.Err()
 	}
 	w.Write(sc.Bytes())
+
+	return http.StatusOK, nil
 }

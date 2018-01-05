@@ -65,7 +65,7 @@ func TestExecuteScriptQuery(t *testing.T) {
 
 func TestExecuteFromScripts(t *testing.T) {
 	router := mux.NewRouter()
-	router.HandleFunc("/_QUERIES/{queriesLocation}/{script}", ExecuteFromScripts)
+	router.Handle("/_QUERIES/{queriesLocation}/{script}", GenericHttpHandler(ExecuteFromScripts))
 	server := httptest.NewServer(router)
 	defer server.Close()
 
@@ -109,7 +109,7 @@ func TestRenderWithXML(t *testing.T) {
 	n := middlewares.GetApp()
 	r := router.Get()
 
-	r.HandleFunc("/schemas", GetSchemas).Methods("GET")
+	r.Handle("/schemas", GenericHttpHandler(GetSchemas)).Methods("GET")
 	n.UseHandler(r)
 	server := httptest.NewServer(n)
 	defer server.Close()
