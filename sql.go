@@ -32,16 +32,16 @@ func ExecuteScriptQuery(rq *http.Request, queriesPath string, script string) ([]
 }
 
 // ExecuteFromScripts is a controller to peform SQL in scripts created by users
-func ExecuteFromScripts(w http.ResponseWriter, r *http.Request) {
+func ExecuteFromScripts(w http.ResponseWriter, r *http.Request) (int, error) {
 	vars := mux.Vars(r)
 	queriesPath := vars["queriesLocation"]
 	script := vars["script"]
 
 	result, err := ExecuteScriptQuery(r, queriesPath, script)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return http.StatusBadRequest, err
 	}
-
 	w.Write(result)
+
+	return http.StatusOK, nil
 }

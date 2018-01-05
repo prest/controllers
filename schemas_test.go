@@ -32,7 +32,7 @@ func TestGetSchemas(t *testing.T) {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/schemas", GetSchemas).Methods("GET")
+	router.Handle("/schemas", GenericHttpHandler(GetSchemas)).Methods("GET")
 	server := httptest.NewServer(router)
 	defer server.Close()
 
@@ -63,7 +63,7 @@ func TestVersionDependentGetSchemas(t *testing.T) {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/schemas", GetSchemas).Methods("GET")
+	router.Handle("/schemas", GenericHttpHandler(GetSchemas)).Methods("GET")
 	server := httptest.NewServer(router)
 	defer server.Close()
 
