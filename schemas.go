@@ -38,15 +38,13 @@ func GetSchemas(w http.ResponseWriter, r *http.Request) {
 	}
 	order = config.PrestConf.Adapter.SchemaOrderBy(order, hasCount)
 
-	sqlSchemas = fmt.Sprint(sqlSchemas, order)
-
 	page, err := config.PrestConf.Adapter.PaginateIfPossible(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	sqlSchemas = fmt.Sprint(sqlSchemas, " ", page)
+	sqlSchemas = fmt.Sprint(sqlSchemas, order, " ", page)
 	sc := config.PrestConf.Adapter.Query(sqlSchemas, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
