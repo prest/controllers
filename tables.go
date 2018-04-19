@@ -239,19 +239,13 @@ func BatchInsertInTables(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(`[`))
-	for i := 0; i < len(names); i++ {
-
-		sql := config.PrestConf.Adapter.InsertSQL(database, schema, table, names[i], placeholders[i])
-
-		sc := config.PrestConf.Adapter.Insert(sql, values[i]...)
-		if sc.Err() != nil {
-			http.Error(w, sc.Err().Error(), http.StatusBadRequest)
-			return
-		}
-		w.Write(sc.Bytes())
+	sql := config.PrestConf.Adapter.BatchInsertSQL(database, schema, table, names, placeholders[0])
+	sc := config.PrestConf.Adapter.BatchInsert(sql, values)
+	if sc.Err() != nil {
+		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
+		return
 	}
-	w.Write([]byte(`]`))
+	w.Write(sc.Bytes())
 }
 
 // DeleteFromTable perform delete sql
