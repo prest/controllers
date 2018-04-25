@@ -239,7 +239,7 @@ func BatchInsertInTables(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sql := config.PrestConf.Adapter.BatchInsertSQL(database, schema, table, names, placeholders[0])
+	sql := config.PrestConf.Adapter.InsertSQL(database, schema, table, names, placeholders)
 	sc := config.PrestConf.Adapter.BatchInsert(sql, values)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)

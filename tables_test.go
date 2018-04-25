@@ -252,7 +252,7 @@ func TestUpdateFromTable(t *testing.T) {
 	server := httptest.NewServer(router)
 	defer server.Close()
 
-	m := make(map[string]interface{}, 0)
+	m := make(map[string]interface{})
 	m["name"] = "prest"
 
 	var testCases = []struct {
