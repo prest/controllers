@@ -244,16 +244,12 @@ func BatchInsertInTables(w http.ResponseWriter, r *http.Request) {
 	if strings.ToLower(method) != "copy" {
 		sql := config.PrestConf.Adapter.InsertSQL(database, schema, table, names, placeholders)
 		sc = config.PrestConf.Adapter.BatchInsertValues(sql, values...)
-		if sc.Err() != nil {
-			http.Error(w, sc.Err().Error(), http.StatusBadRequest)
-			return
-		}
 	} else {
 		sc = config.PrestConf.Adapter.BatchInsertCopy(table, strings.Split(names, ","), values)
-		if sc.Err() != nil {
-			http.Error(w, sc.Err().Error(), http.StatusBadRequest)
-			return
-		}
+	}
+	if sc.Err() != nil {
+		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
+		return
 	}
 	w.WriteHeader(http.StatusCreated)
 	w.Write(sc.Bytes())
