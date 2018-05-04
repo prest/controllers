@@ -222,34 +222,35 @@ func TestBatchInsertInTables(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		t.Log(tc.description)
-		byt, err := json.Marshal(tc.request)
-		if err != nil {
-			t.Error("error on json marshal", err)
-		}
-		req, err := http.NewRequest(http.MethodPost, server.URL+tc.url, bytes.NewReader(byt))
-		if err != nil {
-			t.Error("error on New Request", err)
-		}
-		if tc.isCopy {
-			req.Header.Set("Prest-Batch-Method", "copy")
-		}
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			t.Error("error on Do Request", err)
-		}
-		if resp.StatusCode != tc.status {
-			t.Errorf("expected %d, got: %d", tc.status, resp.StatusCode)
-		}
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			t.Error("error on ioutil ReadAll", err)
-		}
-		fmt.Println(">>>>>>>>>", string(body))
-		if tc.isCopy && len(body) != 0 {
-			t.Errorf("len body is %d", len(body))
-		}
+		t.Run(tc.description, func(t *testing.T) {
+			byt, err := json.Marshal(tc.request)
+			if err != nil {
+				t.Error("error on json marshal", err)
+			}
+			req, err := http.NewRequest(http.MethodPost, server.URL+tc.url, bytes.NewReader(byt))
+			if err != nil {
+				t.Error("error on New Request", err)
+			}
+			if tc.isCopy {
+				req.Header.Set("Prest-Batch-Method", "copy")
+			}
+			client := &http.Client{}
+			resp, err := client.Do(req)
+			if err != nil {
+				t.Error("error on Do Request", err)
+			}
+			if resp.StatusCode != tc.status {
+				t.Errorf("expected %d, got: %d", tc.status, resp.StatusCode)
+			}
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				t.Error("error on ioutil ReadAll", err)
+			}
+			fmt.Println(">>>>>>>>>", string(body))
+			if tc.isCopy && len(body) != 0 {
+				t.Errorf("len body is %d", len(body))
+			}
+		})
 	}
 }
 
