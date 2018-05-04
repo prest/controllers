@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -245,6 +246,7 @@ func TestBatchInsertInTables(t *testing.T) {
 		if err != nil {
 			t.Error("error on ioutil ReadAll", err)
 		}
+		fmt.Println(">>>>>>>>>", string(body))
 		if tc.isCopy && len(body) != 0 {
 			t.Errorf("len body is %d", len(body))
 		}
