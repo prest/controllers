@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/nuveo/log"
 	"github.com/prest/adapters"
 	"github.com/prest/config"
 )
@@ -317,6 +318,21 @@ func UpdateTable(w http.ResponseWriter, r *http.Request) {
 			" WHERE ",
 			where)
 		values = append(values, whereValues...)
+	}
+
+	returningSyntax, err := config.PrestConf.Adapter.ReturningByRequest(r)
+
+	if err != nil {
+		err = fmt.Errorf("could not perform ReturningByRequest: %v", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if returningSyntax != "" {
+		sql = fmt.Sprint(
+			sql,
+			" RETURNING ",
+			returningSyntax)
 	}
 
 	sc := config.PrestConf.Adapter.Update(sql, values...)
