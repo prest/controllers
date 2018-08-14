@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/nuveo/log"
 	"github.com/prest/adapters"
 	"github.com/prest/config"
 )
