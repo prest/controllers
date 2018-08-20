@@ -277,6 +277,20 @@ func DeleteFromTable(w http.ResponseWriter, r *http.Request) {
 		sql = fmt.Sprint(sql, " WHERE ", where)
 	}
 
+	returningSyntax, err := config.PrestConf.Adapter.ReturningByRequest(r)
+	if err != nil {
+		err = fmt.Errorf("could not perform ReturningByRequest: %v", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if returningSyntax != "" {
+		sql = fmt.Sprint(
+			sql,
+			" RETURNING ",
+			returningSyntax)
+	}
+
 	sc := config.PrestConf.Adapter.Delete(sql, values...)
 	if sc.Err() != nil {
 		http.Error(w, sc.Err().Error(), http.StatusBadRequest)
@@ -320,7 +334,6 @@ func UpdateTable(w http.ResponseWriter, r *http.Request) {
 	}
 
 	returningSyntax, err := config.PrestConf.Adapter.ReturningByRequest(r)
-
 	if err != nil {
 		err = fmt.Errorf("could not perform ReturningByRequest: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
