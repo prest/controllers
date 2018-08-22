@@ -296,7 +296,8 @@ func TestUpdateFromTable(t *testing.T) {
 	}{
 		{"execute update in a table without custom where clause", "/prest/public/test", m, http.StatusOK, ""},
 		{"execute update in a table with where clause", "/prest/public/test?name=$eq.nuveo", m, http.StatusOK, ""},
-		{"execute update in a table with where clause", "/prest/public/test?name=$eq.nuveo&_returning=name", m, http.StatusOK, "[{\"name\": \"prest\"}]"},
+		{"execute update in a table with where clause and returning all fields", "/prest/public/test?id=1&_returning=*", m, http.StatusOK, "[{\"id\":1,\"name\":\"prest\"}]"},
+		{"execute update in a table with where clause and returning name field", "/prest/public/test?id=2&_returning=name", m, http.StatusOK, "[{\"name\": \"prest\"}]"},
 		{"execute update in a table with invalid database", "/0prest/public/test", m, http.StatusBadRequest, ""},
 		{"execute update in a table with invalid schema", "/prest/0public/test", m, http.StatusBadRequest, ""},
 		{"execute update in a table with invalid table", "/prest/public/0test", m, http.StatusBadRequest, ""},
